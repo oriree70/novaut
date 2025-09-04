@@ -1,0 +1,30 @@
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Env
+.env*
+
+# Dependencies / builds (if added later)
+node_modules/
+dist/
+build/
+.tmp/
+.cache/
+
+# Editors/IDE
+.vscode/
+.idea/
+*.swp
+
+# Others
+Thumbs.db
+.DS_Store?
+
+
