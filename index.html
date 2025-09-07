@@ -251,49 +251,6 @@
         </div>
     </div>
 
-    
-
     <script src="script.js"></script>
 </body>
-</html><---
-- name: Playbook with Variables
-  hosts: webservers
-  become: yes  # Ensure tasks run with elevated privileges
-  vars:
-    http_port: 80
-  tasks:
-    - name: Update apt cache
-      apt:
-        update_cache: yes
-
-    - name: Install Nginx
-      apt:
-        name: nginx
-        state: present
-
-    - name: Check Nginx installation
-      command: systemctl list-units --type=service | grep nginx
-      register: nginx_service
-
-    - name: Debug Nginx service name
-      debug:
-        msg: {{ nginx_service.stdout_lines }}
-
-    - name: Configure Nginx to listen on port {{ http_port }}
-      template:
-        src: templates/nginx.conf.j2  # Path to the template file
-        dest: /etc/nginx/nginx.conf
-      notify:
-        - Reload Nginx
-
-    - name: Ensure Nginx is running
-      service:
-        name: nginx
-        state: started
-        enabled: true
-
-  handlers:
-    - name: Reload Nginx
-      service:
-        name: nginx
-        state: DNS refresh Sat Sep  6 19:59:27 EDT 2025 -->
+</html>
