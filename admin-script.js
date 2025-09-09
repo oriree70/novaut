@@ -334,6 +334,9 @@ async function handleAddVehicle(e) {
                 customCleared: (formData.get('customCleared') || 'false'),
                 sold: (formData.get('soldStatus') || 'false') === 'true'
             };
+            
+            // Process uploaded images for edit
+            await processUploadedImages(updatedVehicle, beforePhotos, afterPhotos);
             vehicles[vehicleIndex] = updatedVehicle;
             saveVehicles();
             displayAdminVehicles();
