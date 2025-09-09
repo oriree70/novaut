@@ -99,11 +99,11 @@ function createVehicleCard(vehicle) {
             <div class="before-after-container">
                 <div class="image-section before-section">
                     <div class="image-label">BEFORE</div>
-                    <img src="${vehicle.beforeImages[0]}" alt="Before repair" style="cursor: zoom-in;" onclick="event.stopPropagation(); openImageModal('${vehicle.beforeImages[0]}', ${JSON.stringify([...vehicle.beforeImages, ...vehicle.afterImages])});">
+                    <img src="${vehicle.beforeImages[0]}" alt="Before repair" style="cursor: zoom-in;" class="main-vehicle-image" data-image-src="${vehicle.beforeImages[0]}" data-vehicle-id="${vehicle.id}" data-gallery-type="before">
                 </div>
                 <div class="image-section after-section">
                     <div class="image-label">AFTER</div>
-                    <img src="${vehicle.afterImages[0]}" alt="After repair" style="cursor: zoom-in;" onclick="event.stopPropagation(); openImageModal('${vehicle.afterImages[0]}', ${JSON.stringify([...vehicle.beforeImages, ...vehicle.afterImages])});">
+                    <img src="${vehicle.afterImages[0]}" alt="After repair" style="cursor: zoom-in;" class="main-vehicle-image" data-image-src="${vehicle.afterImages[0]}" data-vehicle-id="${vehicle.id}" data-gallery-type="after">
                 </div>
             </div>
         </div>
@@ -152,7 +152,7 @@ function openVehicleModal(vehicleOrId) {
                         <span class="image-count">${vehicle.beforeImages.length} images</span>
                     </div>
                     <div class="gallery-images">
-                        ${vehicle.beforeImages.map((img, index) => `<img src="${img}" alt="Before repair" onclick="event.stopPropagation(); openImageModal('${img}', ${JSON.stringify([...vehicle.beforeImages, ...vehicle.afterImages])});">`).join('')}
+                        ${vehicle.beforeImages.map((img, index) => `<img src="${img}" alt="Before repair" class="gallery-thumbnail" data-image-src="${img}" data-vehicle-id="${vehicle.id}" data-gallery-type="before">`).join('')}
                     </div>
                 </div>
                 <div class="gallery-section after-section">
@@ -161,7 +161,7 @@ function openVehicleModal(vehicleOrId) {
                         <span class="image-count">${vehicle.afterImages.length} images</span>
                     </div>
                     <div class="gallery-images">
-                        ${vehicle.afterImages.map((img, index) => `<img src="${img}" alt="After repair" onclick="event.stopPropagation(); openImageModal('${img}', ${JSON.stringify([...vehicle.beforeImages, ...vehicle.afterImages])});">`).join('')}
+                        ${vehicle.afterImages.map((img, index) => `<img src="${img}" alt="After repair" class="gallery-thumbnail" data-image-src="${img}" data-vehicle-id="${vehicle.id}" data-gallery-type="after">`).join('')}
                     </div>
                 </div>
             </div>
@@ -418,6 +418,22 @@ function setupEventListeners() {
     if (contactForm) {
         contactForm.addEventListener('submit', handleContactForm);
     }
+    
+    // Image click event delegation for gallery thumbnails and main images
+    document.addEventListener("click", function(e) {
+        if (e.target.classList.contains("gallery-thumbnail") || e.target.classList.contains("main-vehicle-image")) {
+            e.stopPropagation();
+            const imageSrc = e.target.getAttribute("data-image-src");
+            const vehicleId = e.target.getAttribute("data-vehicle-id");
+            
+            // Find the vehicle to get all images
+            const vehicle = vehicles.find(v => v.id == vehicleId);
+            if (vehicle && vehicle.beforeImages && vehicle.afterImages) {
+                const allImages = [...vehicle.beforeImages, ...vehicle.afterImages];
+                openImageModal(imageSrc, allImages);
+            }
+        }
+    });
     
     // Populate make filter
     populateMakeFilter();
