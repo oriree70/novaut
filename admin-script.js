@@ -13,22 +13,50 @@ document.addEventListener('DOMContentLoaded', function() {
 // Load vehicles from localStorage or use sample data
 function loadVehicles() {
     const savedVehicles = localStorage.getItem('novatoautos_vehicles');
-    if (savedVehicles) {
-        vehicles = JSON.parse(savedVehicles);
+        let loadedVehicles = JSON.parse(savedVehicles);
+        
+        // Filter out any vehicles with sample/placeholder images
+        vehicles = loadedVehicles.filter(vehicle => {
+            const hasSampleImages = (
+                (vehicle.beforeImages && vehicle.beforeImages.some(img => img.includes("unsplash.com"))) ||
+                (vehicle.afterImages && vehicle.afterImages.some(img => img.includes("unsplash.com")))
+            );
+            return !hasSampleImages;
+        });
+        
+        // If we filtered out vehicles, save the clean data
+        if (vehicles.length !== loadedVehicles.length) {
+            saveVehicles();
+            console.log("🧹 Admin: Filtered out sample vehicles, kept:", vehicles.length);
     } else {
         // No sample data - start with empty array
         console.log("⚠️ No vehicles found in localStorage - starting fresh");
         vehicles = [];
     }
     displayAdminVehicles();
-}// Load messages from localStorage
+}
+
+// Load messages from localStorage
 
 function loadMessages() {
     const savedMessages = localStorage.getItem('novatoautos_messages');
     if (savedMessages) {
         messages = JSON.parse(savedMessages);
-        console.log("⚠️ No messages found in localStorage - starting fresh");
-        messages = [];    }
+    } else {
+        messages = [
+            {
+                id: 1,
+                name: 'John Smith',
+                email: 'john@example.com',
+                phone: '(555) 123-4567',
+                service: 'vehicle-inquiry',
+                message: 'I\'m interested in the 2018 Toyota Camry. Can you provide more details about the accident and repairs?',
+                timestamp: new Date().toISOString(),
+                read: false
+            }
+        ];
+        saveMessages();
+    }
     displayMessages();
 }
 
@@ -272,36 +300,8 @@ function removeUploadedFile(button, index) {
     // Note: In a real application, you'd need to update the file input as well
 }
 
-// Process uploaded images and convert to base64
-async function processUploadedImages(vehicle, beforeFiles, afterFiles) {
-    // Process before images
-    const beforePromises = Array.from(beforeFiles).map(file => {
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                resolve(e.target.result);
-            };
-            reader.readAsDataURL(file);
-        });
-    });
-    
-    // Process after images
-    const afterPromises = Array.from(afterFiles).map(file => {
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                resolve(e.target.result);
-            };
-            reader.readAsDataURL(file);
-        });
-    });
-    
-    vehicle.beforeImages = await Promise.all(beforePromises);
-    vehicle.afterImages = await Promise.all(afterPromises);
-}
-
 // Handle add/update vehicle form submission
-async function handleAddVehicle(e) {
+function handleAddVehicle(e) {
     e.preventDefault();
     
     const formData = new FormData(e.target);
@@ -334,9 +334,6 @@ async function handleAddVehicle(e) {
                 customCleared: (formData.get('customCleared') || 'false'),
                 sold: (formData.get('soldStatus') || 'false') === 'true'
             };
-            
-            // Process uploaded images for edit
-            await processUploadedImages(updatedVehicle, beforePhotos, afterPhotos);
             vehicles[vehicleIndex] = updatedVehicle;
             saveVehicles();
             displayAdminVehicles();
@@ -367,8 +364,15 @@ async function handleAddVehicle(e) {
             dateAdded: new Date().toISOString()
         };
 
-        // Process uploaded images
-        await processUploadedImages(newVehicle, beforePhotos, afterPhotos);
+        // For demo purposes, use placeholder images
+        newVehicle.beforeImages = [
+            'https://images.unsplash.com/photo-1549317336-206569e8475c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+            'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
+        ];
+        newVehicle.afterImages = [
+            'https://images.unsplash.com/photo-1549317336-206569e8475c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+            'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
+        ];
 
         vehicles.unshift(newVehicle); // Add to beginning for newest first
         saveVehicles();
