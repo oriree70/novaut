@@ -1,43 +1,53 @@
-// Sample vehicle data
-const vehicles = [
-    {
-        id: 1,
-        make: 'Toyota',
-        model: 'Camry',
-        year: 2018,
-        mileage: 45000,
-        priceBefore: 12000,
-        priceAfter: 8500,
-        condition: 'Excellent',
-        beforeImages: [
-            'https://images.unsplash.com/photo-1549317336-206569e8475c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-            'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-            'https://images.unsplash.com/photo-1555215695-3004980ad54e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-            'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-            'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-            'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-            'https://images.unsplash.com/photo-1583121274602-3e2820c69888?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-            'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-            'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-            'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
-        ],
-        afterImages: [
-            'https://images.unsplash.com/photo-1549317336-206569e8475c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-            'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-            'https://images.unsplash.com/photo-1555215695-3004980ad54e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-            'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-            'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-            'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-            'https://images.unsplash.com/photo-1583121274602-3e2820c69888?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-            'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-            'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-            'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
-        ],
-        features: ['Automatic Transmission', 'Air Conditioning', 'Power Windows', 'Bluetooth'],
-        description: 'Beautifully restored 2018 Toyota Camry with comprehensive accident repair documentation.',
-        customCleared: 'true',
-        sold: false
-    },
+// Load vehicles from localStorage (same as admin panel)
+let vehicles = [];
+
+// Load vehicles from localStorage or use sample data
+function loadVehicles() {
+    const savedVehicles = localStorage.getItem('novatoautos_vehicles');
+    if (savedVehicles) {
+        vehicles = JSON.parse(savedVehicles);
+    } else {
+        // Use sample data if no saved vehicles
+        vehicles = [
+            {
+                id: 1,
+                make: 'Toyota',
+                model: 'Camry',
+                year: 2018,
+                mileage: 45000,
+                priceBefore: 12000,
+                priceAfter: 8500,
+                condition: 'Excellent',
+                beforeImages: [
+                    'https://images.unsplash.com/photo-1549317336-206569e8475c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                    'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                    'https://images.unsplash.com/photo-1555215695-3004980ad54e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                    'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                    'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                    'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                    'https://images.unsplash.com/photo-1583121274602-3e2820c69888?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                    'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                    'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
+                ],
+                afterImages: [
+                    'https://images.unsplash.com/photo-1549317336-206569e8475c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                    'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                    'https://images.unsplash.com/photo-1555215695-3004980ad54e?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                    'https://images.unsplash.com/photo-1558618047-3c8c76ca7d13?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                    'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                    'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                    'https://images.unsplash.com/photo-1583121274602-3e2820c69888?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                    'https://images.unsplash.com/photo-1592198084033-aade902d1aae?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                    'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                    'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
+                ],
+                features: ['Automatic Transmission', 'Air Conditioning', 'Power Windows', 'Bluetooth'],
+                description: 'Beautifully restored 2018 Toyota Camry with comprehensive accident repair documentation.',
+                customCleared: 'true',
+                sold: false,
+                dateAdded: new Date().toISOString()
+            },
     {
         id: 2,
         make: 'Honda',
@@ -527,12 +537,17 @@ const vehicles = [
             'https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
             'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
         ],
-        features: ['Automatic Transmission', 'Leather Seats', 'Premium Audio', 'Navigation', 'Sunroof', 'Heated Seats'],
-        description: 'Luxurious Lexus ES with premium comfort and reliability.',
-        customCleared: true,
-        sold: false
+                features: ['Automatic Transmission', 'Air Conditioning', 'Power Windows', 'Bluetooth'],
+                description: 'Beautifully restored 2018 Toyota Camry with comprehensive accident repair documentation.',
+                customCleared: 'true',
+                sold: false,
+                dateAdded: new Date().toISOString()
+            }
+        ];
+        // Save sample data to localStorage if none exists
+        localStorage.setItem('novatoautos_vehicles', JSON.stringify(vehicles));
     }
-];
+}
 
 // DOM Elements
 const vehiclesGrid = document.getElementById('vehiclesGrid');
@@ -583,7 +598,10 @@ function customClearedLabel(value) {
 
 // Load vehicles from localStorage or use sample data
 function loadVehicles() {
-    // Always use fresh sample data for the main website
+    const savedVehicles = localStorage.getItem('novatoautos_vehicles');
+    if (savedVehicles) {
+        vehicles = JSON.parse(savedVehicles);
+    }
     // Filter out sold vehicles for the main website
     const availableVehicles = vehicles.filter(vehicle => !vehicle.sold);
     displayVehicles(availableVehicles);
