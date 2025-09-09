@@ -27,21 +27,8 @@ function loadMessages() {
     const savedMessages = localStorage.getItem('novatoautos_messages');
     if (savedMessages) {
         messages = JSON.parse(savedMessages);
-    } else {
-        messages = [
-            {
-                id: 1,
-                name: 'John Smith',
-                email: 'john@example.com',
-                phone: '(555) 123-4567',
-                service: 'vehicle-inquiry',
-                message: 'I\'m interested in the 2018 Toyota Camry. Can you provide more details about the accident and repairs?',
-                timestamp: new Date().toISOString(),
-                read: false
-            }
-        ];
-        saveMessages();
-    }
+        console.log("⚠️ No messages found in localStorage - starting fresh");
+        messages = [];    }
     displayMessages();
 }
 
