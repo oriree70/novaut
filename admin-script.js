@@ -21,8 +21,8 @@ function loadVehicles() {
         vehicles = [];
     }
     displayAdminVehicles();
-}        ];
-// Load messages from localStorage
+}// Load messages from localStorage
+
 function loadMessages() {
     const savedMessages = localStorage.getItem('novatoautos_messages');
     if (savedMessages) {
