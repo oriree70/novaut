@@ -285,8 +285,36 @@ function removeUploadedFile(button, index) {
     // Note: In a real application, you'd need to update the file input as well
 }
 
+// Process uploaded images and convert to base64
+async function processUploadedImages(vehicle, beforeFiles, afterFiles) {
+    // Process before images
+    const beforePromises = Array.from(beforeFiles).map(file => {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                resolve(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+    
+    // Process after images
+    const afterPromises = Array.from(afterFiles).map(file => {
+        return new Promise((resolve) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                resolve(e.target.result);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+    
+    vehicle.beforeImages = await Promise.all(beforePromises);
+    vehicle.afterImages = await Promise.all(afterPromises);
+}
+
 // Handle add/update vehicle form submission
-function handleAddVehicle(e) {
+async function handleAddVehicle(e) {
     e.preventDefault();
     
     const formData = new FormData(e.target);
@@ -349,15 +377,8 @@ function handleAddVehicle(e) {
             dateAdded: new Date().toISOString()
         };
 
-        // For demo purposes, use placeholder images
-        newVehicle.beforeImages = [
-            'https://images.unsplash.com/photo-1549317336-206569e8475c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-            'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
-        ];
-        newVehicle.afterImages = [
-            'https://images.unsplash.com/photo-1549317336-206569e8475c?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
-            'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
-        ];
+        // Process uploaded images
+        await processUploadedImages(newVehicle, beforePhotos, afterPhotos);
 
         vehicles.unshift(newVehicle); // Add to beginning for newest first
         saveVehicles();
