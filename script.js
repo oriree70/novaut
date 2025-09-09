@@ -601,9 +601,13 @@ function loadVehicles() {
     const savedVehicles = localStorage.getItem('novatoautos_vehicles');
     if (savedVehicles) {
         vehicles = JSON.parse(savedVehicles);
+        console.log('Loaded vehicles from localStorage:', vehicles.length);
+    } else {
+        console.log('No vehicles in localStorage, using sample data');
     }
     // Filter out sold vehicles for the main website
     const availableVehicles = vehicles.filter(vehicle => !vehicle.sold);
+    console.log('Available vehicles for display:', availableVehicles.length);
     displayVehicles(availableVehicles);
 }
 
@@ -616,7 +620,14 @@ function clearAndReload() {
 function displayVehicles(vehiclesToShow) {
     vehiclesGrid.innerHTML = '';
     
-    vehiclesToShow.forEach(vehicle => {
+    // Sort vehicles by dateAdded (newest first)
+    const sortedVehicles = vehiclesToShow.sort((a, b) => {
+        const dateA = new Date(a.dateAdded || 0);
+        const dateB = new Date(b.dateAdded || 0);
+        return dateB - dateA; // Newest first
+    });
+    
+    sortedVehicles.forEach(vehicle => {
         const vehicleCard = createVehicleCard(vehicle);
         vehiclesGrid.appendChild(vehicleCard);
     });

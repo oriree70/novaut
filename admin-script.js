@@ -391,7 +391,14 @@ function displayRecentVehicles() {
 function displayAdminVehicles() {
     const adminVehiclesList = document.getElementById('adminVehiclesList');
     
-    adminVehiclesList.innerHTML = vehicles.map(vehicle => {
+    // Sort vehicles by dateAdded (newest first)
+    const sortedVehicles = vehicles.sort((a, b) => {
+        const dateA = new Date(a.dateAdded || 0);
+        const dateB = new Date(b.dateAdded || 0);
+        return dateB - dateA; // Newest first
+    });
+    
+    adminVehiclesList.innerHTML = sortedVehicles.map(vehicle => {
         const priceBefore = Number(vehicle.priceBefore) || 0;
         const priceAfter = Number(vehicle.priceAfter) || 0;
         const savings = priceBefore - priceAfter;
@@ -616,7 +623,7 @@ function handleAddVehicle(e) {
             'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
         ];
 
-        vehicles.push(newVehicle);
+        vehicles.unshift(newVehicle); // Add to beginning for newest first
         saveVehicles();
         displayAdminVehicles();
         updateDashboard();
