@@ -841,3 +841,31 @@ function importData() {
     };
     input.click();
 }
+
+// Clear all data function
+function clearAllData() {
+    if (confirm('⚠️ WARNING: This will permanently delete ALL vehicles and messages data.\n\nThis action cannot be undone. Are you sure?')) {
+        if (confirm('🚨 FINAL CONFIRMATION: All data will be lost forever!\n\nClick OK to proceed with deletion.')) {
+            // Clear localStorage
+            localStorage.removeItem('novatoautos_vehicles');
+            localStorage.removeItem('novatoautos_messages');
+            
+            // Clear arrays
+            vehicles = [];
+            messages = [];
+            
+            // Update displays
+            displayAdminVehicles();
+            displayMessages();
+            updateDashboard();
+            
+            // Show success message
+            showAlert('✅ All data has been cleared successfully!', 'success');
+            
+            // Refresh the page after a short delay
+            setTimeout(() => {
+                location.reload();
+            }, 2000);
+        }
+    }
+}
