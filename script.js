@@ -54,7 +54,23 @@ function customClearedLabel(value) {
 function loadVehicles() {
     const savedVehicles = localStorage.getItem('novatoautos_vehicles');
     if (savedVehicles) {
-        vehicles = JSON.parse(savedVehicles);
+        let loadedVehicles = JSON.parse(savedVehicles);
+        
+        // Filter out any vehicles with sample/placeholder images
+        vehicles = loadedVehicles.filter(vehicle => {
+            const hasSampleImages = (
+                (vehicle.beforeImages && vehicle.beforeImages.some(img => img.includes('unsplash.com'))) ||
+                (vehicle.afterImages && vehicle.afterImages.some(img => img.includes('unsplash.com')))
+            );
+            return !hasSampleImages;
+        });
+        
+        // If we filtered out vehicles, save the clean data
+        if (vehicles.length !== loadedVehicles.length) {
+            localStorage.setItem('novatoautos_vehicles', JSON.stringify(vehicles));
+            console.log('🧹 Frontend: Filtered out sample vehicles, kept:', vehicles.length);
+        }
+        
         console.log('✅ Loaded vehicles from localStorage:', vehicles.length);
     } else {
         vehicles = [];
